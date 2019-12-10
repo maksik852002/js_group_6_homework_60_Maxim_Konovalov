@@ -1,4 +1,5 @@
 import React, {Component, Fragment} from 'react';
+import axios from 'axios';
 import SendMessageForm from '../components/SendMessageForm/SendMessageForm';
 import Messages from '../components/Messages/Messages'
 
@@ -28,10 +29,10 @@ class Chat extends Component {
 
   getMessage = async () => {
     let messages = [...this.state.messages];
-    await fetch(mainUrl + dateTime)
-    .then(response => response.json())
-    .then(result => {
-      result.length!==0 && (dateTime = `?datetime=${result[result.length-1].datetime}`)
+    await axios.get(mainUrl + dateTime)
+    .then(response => {
+      let result = response.data;
+      result.length!==0 && (dateTime = `?datetime=${result[result.length-1].datetime}`);
       this.state.messages === 0
       ? messages = result
       : result.map(message => messages.push(message))
@@ -44,7 +45,7 @@ class Chat extends Component {
     e.preventDefault();
     data.set('message', `${this.state.input}`);
     data.set('author', `${this.state.author}`); 
-    fetch(mainUrl, {method:'post', body:data});
+    axios({method:'post', url:mainUrl, data});
     this.setState({input:''});
     this.getMessage();
     interval = setInterval(this.getMessage,4000);
