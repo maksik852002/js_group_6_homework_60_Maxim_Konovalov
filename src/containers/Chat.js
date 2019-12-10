@@ -16,7 +16,7 @@ class Chat extends Component {
       input:'',
       author:'',
     }
-  }
+  };
 
   componentDidMount () {
     interval = setInterval(this.getMessage,2000);
@@ -24,7 +24,7 @@ class Chat extends Component {
 
   componentWillUnmount () {
     clearInterval(interval);
-  }
+  };
 
   getMessage = async () => {
     let messages = [...this.state.messages];
@@ -40,22 +40,24 @@ class Chat extends Component {
   };
 
   sendMessage = (e) => {
-    // clearInterval(interval);
+    clearInterval(interval);
     e.preventDefault();
     data.set('message', `${this.state.input}`);
     data.set('author', `${this.state.author}`); 
-    fetch(mainUrl, {method:'post', body:data})
-    // this.getMessage()
-  }
+    fetch(mainUrl, {method:'post', body:data});
+    this.setState({input:''});
+    this.getMessage();
+    interval = setInterval(this.getMessage,4000);
+  };
 
   render = () => {
-    // console.log(this.state.messages)
     return (
       <Fragment>
         <SendMessageForm
           send = {(e) => this.sendMessage(e)}
           input = {(e) => this.setState({input:e.target.value})}
           author = {(e) => this.setState({author:e.target.value})}
+          value = {this.state.input}
         />
         {this.state.messages.map(el => (
          <Messages
@@ -67,6 +69,7 @@ class Chat extends Component {
         )).reverse()}
       </Fragment>
     )
-  }
+  };
 };
+
 export default Chat;

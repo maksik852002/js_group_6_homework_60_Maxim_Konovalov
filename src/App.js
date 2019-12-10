@@ -1,5 +1,5 @@
 import React from 'react';
-import Chat from './containers/Chat'
+import Chat from './containers/Chat';
 import './bootstrap.min.css';
 
 function App() {
